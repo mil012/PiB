@@ -17,7 +17,12 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-# TODO: Read saved weights and name it 'model'
+# TODO: Read saved weights
+def get_model():
+    model = getattr(g, 'model', None)
+    if model is None:
+        model = g.model =               # Load the model here
+    return model
 
 def classify(path_to_image):
     """
@@ -41,6 +46,9 @@ def classify(path_to_image):
     
     # Turns image shape of (2,) to (1,2)
     image_to_be_classified = np.expand_dims(normalized_image, axis=0)
+    
+    # Retrieving the model
+    model = get_model()
 
     # TODO: Use network to predict the 'image_to_be_classified' and
     # get an array of prediction values
@@ -89,7 +97,7 @@ def predict():
         
 def main():
     # Starts the webserver
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=80, threaded=False)
 
 # Runs the main function if this file is run directly
 if __name__ == "__main__":
