@@ -65,7 +65,7 @@ def classify(path_to_image):
     # Be sure to call your confidence value 'conf'
     
     prediction = {'label': label,
-                  'confidence': conf}
+                  'confidence': float(conf)}
 
     return prediction
 
