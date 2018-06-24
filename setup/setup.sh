@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Install various tools and perform environment setup for Raspberry Pi 3 for
 # face recognition project by Project in a Box.
 # Author: Simon Fong
