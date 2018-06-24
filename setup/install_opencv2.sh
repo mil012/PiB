@@ -10,5 +10,5 @@ cd ~/opencv-2.4.13.4
 mkdir build
 cd build
 cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local ..
-make -j3
+make -j3            # May take up to 2 hours.
 sudo make install
