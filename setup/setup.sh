@@ -6,6 +6,10 @@
 sudo apt-get update -y
 sudo apt-get upgrade -y
 
+# Enable SSH (Does not seem t work)
+sudo systemctl enable ssh
+sudo systemctl start ssh
+
 # Install Vim for text editing
 sudo apt-get install vim -y
 
