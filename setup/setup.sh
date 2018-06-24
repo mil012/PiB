@@ -29,6 +29,7 @@ then
 else
     if grep -Fxq "start_x=0" $CONFIG
     then
+        echo "start_x=0 found. Enabling now..."
         sed -i 's/start_x=0/start_x=1/g' $CONFIG
     else
         echo "start_x not found. Appending now..."
