@@ -10,6 +10,6 @@ sudo apt-get upgrade -y
 sudo apt-get install vim -y
 
 # Set keyboard to US layout
-cp keyboard /etc/default/keyboard
+sudo cp keyboard /etc/default/keyboard
 
 
