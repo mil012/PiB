@@ -6,7 +6,7 @@
 sudo apt-get update -y
 sudo apt-get upgrade -y
 
-# Enable SSH (Does not seem t work)
+# Enable SSH
 sudo systemctl enable ssh
 sudo systemctl start ssh
 
