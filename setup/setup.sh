@@ -35,6 +35,7 @@ else
         echo "start_x not found. Appending now..."
         echo "start_x=1" >> $CONFIG
         echo "gpu_mem=128" >> $CONFIG
+    fi
 fi
 
 
