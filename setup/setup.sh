@@ -22,12 +22,18 @@ sudo apt-get install vim -y
 sudo cp keyboard /etc/default/keyboard
 
 # Enable PiCamera (Same from raspi-config)
-set_config_var start_x 1 /boot/config.txt
-CUR_GPU_MEM=$(get_config_var gpu_mem /boot/config.txt)
-if [ -z "$CUR_GPU_MEM" ] || [ "$CUR_GPU_MEM" -lt 128 ]; then
-  set_config_var gpu_mem 128 /boot/config.txt
+CONFIG="/boot/config.txt"
+if grep -Fxq "start_x=1" $CONFIG
+then
+    echo "Camera already enabled."
+else
+    if grep -Fxq "start_x=0" $CONFIG
+    then
+        sed -i 's/start_x=0/start_x=1/g' $CONFIG
+    else
+        echo "start_x not found. Appending now..."
+        echo "start_x=1" >> $CONFIG
+        echo "gpu_mem=128" >> $CONFIG
 fi
-sed /boot/config.txt -i -e "s/^startx/#startx/"
-sed /boot/config.txt -i -e "s/^fixup_file/#fixup_file/"
 
 
