@@ -38,4 +38,15 @@ else
     fi
 fi
 
+# Install Python packages
+
+# Install environment tool
+sudo pip install virtualenv
+
+# Install Flask and CORS
+sudo pip install flask flask-cors
+
+# Install Machine Learning Framework
+# pip install tensorflow keras h5py
+
 
