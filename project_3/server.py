@@ -1,6 +1,6 @@
 """
 ECE196 Face Recognition Project
-Author: W Chen, Simon Fong
+Author: Will Chen, Simon Fong
 
 What this script should do:
 1. Load a model with saved weights.
@@ -13,15 +13,21 @@ What this script should do:
 import cv2
 import numpy as np
 from keras.models import load_model
-from flask import Flask, request, jsonify, g
+from flask import Flask, request, jsonify, g, abort, send_from_directory
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)                               # Allow CORS (Cross Origin Requests)
 
 # TODO: Read saved weights
 def get_model():
+    """
+    Retrieves and returns the model. Handles global with flask.
+    :return: model
+    """
     model = getattr(g, 'model', None)
     if model is None:
-        model = g.model =               # Load the model here
+        model = g.model = # _________   # Load the model from weight file
     return model
 
 def classify(path_to_image):
@@ -47,17 +53,19 @@ def classify(path_to_image):
     # Turns image shape of (2,) to (1,2)
     image_to_be_classified = np.expand_dims(normalized_image, axis=0)
     
-    # Retrieving the model
-    model = get_model()
+    # TODO: Get the model using
+    model = #_____
 
     # TODO: Use network to predict the 'image_to_be_classified' and
     # get an array of prediction values
+    # Note: model.predict() returns an array of arrays ie. [[classes]]
     
     
     # TODO: Get the predicted label which is defined as follows:
     # Label = the index of the largest value in the prediction array
     # This label is a number, which corresponds to the same number you 
     # give to the folder when you organized data
+    # Hint: np.argmax
     
     
     # TODO: Calculate confidence according to the following metric:
@@ -73,12 +81,21 @@ def classify(path_to_image):
 def predict():
     """Receives an image, classifies the image, and responds with the label."""
     
-    # This extracts the image data from the request
-    image = request.args.get('file')
+    image = None
+    
+    # This extracts the image data from the request 
+    if(request.method == 'POST'):
+        
+        if('image' not in request.form):
+            print(request.form)
+            abort(400)    
+        image = request.form['image']
+        data = {'data':'foo'}
+        
     starter = image.find(',')
     image_data = image[starter+1:]
     
-    #Path where the image will be saved
+    # Path where the image will be saved
     temp_image_name = 'temp.jpg'
     
     # Decodes the image data and saves the image to disk                   
@@ -97,8 +114,8 @@ def predict():
         
 def main():
     # Starts the webserver
-    app.run(host='0.0.0.0', port=8080, threaded=False)
+    app.run(host='0.0.0.0', port=8080, threaded=False, debug=True)
 
 # Runs the main function if this file is run directly
-if __name__ == "__main__":
+if(__name__ == "__main__"):
     main()
