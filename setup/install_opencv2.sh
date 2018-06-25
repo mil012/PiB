@@ -6,7 +6,7 @@
 # Author: Simon Fong
 
 # Install everything in home directory.
-cd ~
+cd /home/pi
 
 # Developer tools used in build process
 sudo apt-get install build-essential cmake pkg-config git -y
@@ -32,7 +32,7 @@ sudo apt-get install python-dev python-numpy -y
 #Get files
 wget -O opencv.zip https://github.com/opencv/opencv/archive/2.4.13.4.zip
 unzip opencv.zip
-cd ~/opencv-2.4.13.4
+cd /home/pi/opencv-2.4.13.4
 mkdir build
 cd build
 cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local ..
