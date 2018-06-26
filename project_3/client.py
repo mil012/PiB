@@ -1,5 +1,5 @@
 """
-ECE196 Face Recognition Project
+ECE 196 Face Recognition Project
 Author: Will Chen, Simon Fong
 
 What this script should do:
@@ -41,10 +41,10 @@ def request_from_server(img):
     image_64_encode = base64.encodestring(image_read)
      
     # Defining a params dict for the parameters to be sent to the API
-    PARAMS = {'file':image_64_encode}
+    payload = {'image':image_64_encode}
      
     # Sending get request and saving the response as response object
-    response = requests.get(url = URL, params = PARAMS)
+    response = requests.post(url = URL, json = payload)
      
     # Get prediction from response
     prediction = response.json()
