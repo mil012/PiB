@@ -1,6 +1,6 @@
 """
 ECE196 Face Recognition Project
-Author: W Chen
+Author: Will Chen, Simon Fong
 
 What this script should do:
 1. Start running the camera.
