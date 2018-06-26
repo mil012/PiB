@@ -81,22 +81,22 @@ def main():
         # Be sure to save the faces in a variable called 'faces'
 
         for (x, y, w, h) in faces:
-            print '=================================='
-            print 'Face detected!'
+            print('==================================')
+            print('Face detected!')
             cv2.imshow('Face Image for Classification', frame)
             
             # Keep showing image until a key is pressed
             cv2.waitKey()
             answer = input('Confirm image (1-yes / 0-no): ')
-            print '=================================='
+            print('==================================')
 
-            if answer == 1:
-                print 'Let\'s see who you are...'
+            if(answer == 1):
+                print('Let\'s see who you are...')
                 
                 # TODO: Get label and confidence using request_from_server
                 
                 
-                print 'New result found!'
+                print('New result found!')
 
                 # TODO: Display label on face image
                 # Save what you want to write on image to 'result_to_display'
@@ -112,9 +112,9 @@ def main():
         # Delete image in variable so we can get the next frame
         rawCapture.truncate(0)
         
-        print 'Waiting for image...'
+        print('Waiting for image...')
         time.sleep(1)
 
 # Runs main if this file is run directly
-if __name__ == '__main__':
+if(__name__ == '__main__'):
     main()
