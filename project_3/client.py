@@ -43,7 +43,7 @@ def request_from_server(img):
     # Defining a params dict for the parameters to be sent to the API
     payload = {'image':image_64_encode}
      
-    # Sending get request and saving the response as response object
+    # Sending post request and saving the response as response object
     response = requests.post(url = URL, json = payload)
      
     # Get prediction from response
