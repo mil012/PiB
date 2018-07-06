@@ -18,22 +18,15 @@ Installation:
 import cv2
 import numpy as np
 from keras.models import load_model
-from flask import Flask, request, jsonify, g, abort, send_from_directory
+from flask import Flask, request, jsonify, abort, send_from_directory
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)                               # Allow CORS (Cross Origin Requests)
 
-# TODO: Read saved weights
-def get_model():
-    """
-    Retrieves and returns the model. Handles global with flask.
-    :return: model
-    """
-    model = getattr(g, 'model', None)
-    if model is None:
-        model = g.model = # _________   # Load the model from weight file
-    return model
+# TODO: Load the model from the weights file.
+MODEL = #_______
+
 
 def classify(path_to_image):
     """
@@ -59,12 +52,10 @@ def classify(path_to_image):
     # Turns image shape of (2,) to (1,2)
     image_to_be_classified = np.expand_dims(normalized_image, axis=0)
     
-    # TODO: Get the model using
-    model = #_____
 
     # TODO: Use network to predict the 'image_to_be_classified' and
     # get an array of prediction values
-    # Note: model.predict() returns an array of arrays ie. [[classes]]
+    # Note: MODEL.predict() returns an array of arrays ie. [[classes]]
     predictions = #______
     
     # TODO: Get the predicted label which is defined as follows:
