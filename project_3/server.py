@@ -75,7 +75,7 @@ def classify(path_to_image):
     conf = #__________
 
     
-    prediction = {'label': label,
+    prediction = {'label': str(label),
                   'confidence': float(conf)}
 
     return 
@@ -86,6 +86,54 @@ def index():
     Handles sending the webcam tool.
     """
     return send_from_directory('.','index.html')
+
+# Persons seen list. Contains prediction dictionaries of label and confidence.
+persons = []
+
+@app.route('/person/<person>')
+def get_person(person):
+    """ Handles returning persons last seen.
+
+    If a integer is given, return the the person in that index of the array.
+    If the string 'last', return the last person seen.
+    If anything else, return an error.
+
+    :param person: index | last | other
+    :return: prediction | error
+    """
+
+    # Default prediction to return. If nobody has been logged yet.
+    prediction = {'error': 'No body seen yet.'}
+
+    # Default index
+    index = None
+
+    # Handle specific index
+    try:
+        index = int(person)
+
+    except ValueError as e:
+        print("Exception: {}".format(e))
+
+    # Handle last person
+    if(person == 'last'):
+        index = -1
+    
+    # Handle out of bounds.
+    try:
+         prediction = persons[index]
+    except IndexError as e:
+        # When index is not in range.
+        print("Exception: {}".format(e))
+    except TypeError as e:
+        # When index is None
+        print("Exception: {}".format(e))
+
+    # Converts python dictionary into JSON format
+    prediction_json = jsonify(prediction)
+    
+    # Respond to the request (Send prediction back to Pi)    
+    return prediction_json
 
 @app.route('/predict')
 def predict():
@@ -116,6 +164,9 @@ def predict():
     # TODO: Call classify to predict the image and save the result to a 
     # variable called 'prediction'
     prediction = classify(temp_image_name)
+
+    # Add to persons list
+    persons.append(prediction)
     
     # Converts python dictionary into JSON format
     prediction_json = jsonify(prediction)
@@ -123,10 +174,17 @@ def predict():
     # Respond to the request (Send prediction back to Pi)    
     return prediction_json
         
-def main():
-    # Starts the webserver
-    app.run(host='0.0.0.0', port=8080, threaded=False, debug=True)
+def main(args):
+    app.run(host='0.0.0.0', port=args.port, threaded=False, 
+        debug=args.debug, ssl_context=args.ssl)
 
-# Runs the main function if this file is run directly
+
 if(__name__ == "__main__"):
-    main()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-p','--port', help="Port that the server will run on.", type=int, default=8080)
+    parser.add_argument('-d','--debug', help="Whether or not to run in debug mode.", default=False, action='store_true')
+    parser.add_argument('-s','--ssl', help="Whether or not to run with HTTPS", default='adhoc', action='store_const',const='adhoc')
+
+    args = parser.parse_args()
+    main(args)
