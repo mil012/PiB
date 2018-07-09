@@ -1,0 +1,161 @@
+ <!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+        input{width: 300px}
+        .data {
+            padding: 5px; 
+            border-left: 1px solid gray;
+            font-family: sans-serif;
+            margin: 0px;
+        }
+        .data_container {
+            padding: 5px; 
+            width: 500px;
+            border: 1px solid gray;
+            border-radius: 5px;
+            font-family: sans-serif;
+        }
+        h1 {
+            font-family: sans-serif;
+        }
+        p {
+            font-family: sans-serif;
+        }
+        body {
+            font-family: sans-serif;
+        }
+    </style>
+  </head>
+  <body onload="init();">
+    <h1>Take a snapshot of the current video stream</h1>
+   Click on the Start WebCam button.
+     <p>
+    <button onclick="startWebcam();">Start WebCam</button>
+    <button onclick="stopWebcam();">Stop WebCam</button> 
+       <button onclick="snapshot();">Take Snapshot</button> 
+       <a id="download" download="image.jpg" href=""><button>Download</button></a>
+       <button onclick="post_request();">Post Request</button> 
+    </p>
+    <p>
+        <input id="endpoint" type=text placeholder="http:localhost:8080/predict">
+        <button onclick="setEndpoint()">Set Endpoint</button>
+    </p>
+    <p class="data_container">
+        Endpoint <span id="endpoint_output" class="data">Waiting for response...</span>
+    </p>
+    <p class="data_container">
+        Response <span id="response_output" class="data">Waiting for response...</span>
+    </p>
+    <p class="data_container">
+        Status <span id="status" class="data">None</span>
+    </p>
+     
+    <video onclick="snapshot(this);" width=400 height=400 id="video" controls autoplay></video>
+  <p>
+
+        Screenshots : <p>
+      <canvas  id="myCanvas" width="400" height="350"></canvas>  
+  </body>
+  <script>
+      //--------------------
+      // GET USER MEDIA CODE
+      //--------------------
+          navigator.getUserMedia = ( navigator.getUserMedia ||
+                             navigator.webkitGetUserMedia ||
+                             navigator.mozGetUserMedia ||
+                             navigator.msGetUserMedia);
+
+      var video;
+
+      function startWebcam() {
+        if (navigator.getUserMedia) {
+           navigator.getUserMedia (
+
+              // constraints
+              {
+                 video: true,
+                 audio: false
+              },
+
+              // successCallback
+              function(localMediaStream) {
+                 video = document.querySelector('video');
+                 video.srcObject = localMediaStream;
+              },
+
+              // errorCallback
+              function(err) {
+                 console.log("The following error occured: " + err);
+              }
+           );
+        } else {
+           console.log("getUserMedia not supported");
+        }  
+      }
+
+      function stopWebcam() {
+          video.srcObject.getVideoTracks()[0].stop();
+          
+      }
+      //---------------------
+      // TAKE A SNAPSHOT CODE
+      //---------------------
+      var canvas, ctx;
+
+      function init() {
+        // Get the canvas and obtain a context for
+        // drawing in it
+        canvas = document.getElementById("myCanvas");
+        ctx = canvas.getContext('2d');
+        
+        var endpoint = window.location.href + 'predict';
+        $('#endpoint').attr('placeholder',endpoint);
+        $('#endpoint_output').text(endpoint);
+      }
+      
+      var imageURI;
+      function snapshot() {
+         // Draws current image from the video element into the canvas
+        ctx.drawImage(video, 0,0, canvas.width, canvas.height);
+        imageURI = canvas.toDataURL('image/jpeg');
+        //console.log(imageURI);
+        download = document.getElementById("download");
+        download.href = imageURI;
+      }
+      var endpoint = window.location.href + 'predict';
+      function post_request() {
+        console.log("Posting");
+        url = "http://mothakes.requestcatcher.com/";
+        url = endpoint;
+        console.log(url);
+        data = {"image": imageURI};
+        console.log(data);
+        $('#status').text('Sending request to ' + url + ' ...');
+        $('#status').css('background-color', 'DodgerBlue');
+        $('#status').css('color', 'white');
+        $.post(url,data, function(data, status){
+            //alert("Data: " + data + "\nStatus: " + status);
+            console.log(data);
+            setResponseBox(data);
+            $('#status').text('Response received.');
+            $('#status').css('background-color', 'MediumSeaGreen');
+            $('#status').css('color', 'white');
+        });
+      }
+      
+      function setEndpoint() {
+        console.log("Setting endpoint.");
+        text = document.getElementById("endpoint");
+        console.log(text.value);
+        endpoint = text.value;
+        $('#endpoint_output').text(text.value);
+      }
+      
+      function setResponseBox(value){
+        $('#response_output').text(value.label);
+      }
+
+  </script>
+</html>
